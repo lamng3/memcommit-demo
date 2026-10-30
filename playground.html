@@ -12,14 +12,22 @@
 </head>
 <body>
 <a class="skip" href="#content">Skip to content</a>
-<header class="site">
-  <a class="logo" href="index.html"><span class="logo-mark">M</span><span>MemCommit</span></a>
-  <nav class="site" aria-label="Demos">
-    <a href="playground.html" aria-current="page">Playground</a>
-    <a href="leaderboard.html">Leaderboard</a>
-    <a href="visualize/">Visualize</a>
-    <a href="https://lamng3.com/" class="pill">Lam Nguyen ↗</a>
-  </nav>
+<style>
+.dsh { --dsh-acc: #0c6b52; box-sizing: border-box; max-width: 1280px; margin: 0 auto; padding: 16px 24px; display: flex; align-items: center;
+  justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; font-family: "TikTok Sans", system-ui, -apple-system, sans-serif; line-height: 1.4; }
+.dsh a { text-decoration: none; color: inherit; }
+.dsh-logo { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
+.dsh-mark { width: 28px; height: 28px; border-radius: 7px; background: #0c6b52; color: #fff; display: grid; place-items: center; font-size: 16px; font-weight: 700; }
+.dsh-nav { display: flex; flex-wrap: wrap; gap: 4px; }
+.dsh-nav a { padding: 5px 14px; border-radius: 999px; font-size: 15px; opacity: 0.72; }
+.dsh-nav a:hover { opacity: 1; }
+.dsh-nav a[aria-current] { opacity: 1; color: var(--dsh-acc); background: color-mix(in srgb, var(--dsh-acc) 13%, transparent); font-weight: 500; }
+@media (max-width: 640px) { .dsh { padding: 12px 16px; } .dsh-nav a { padding: 4px 10px; font-size: 14px; } }
+@media (prefers-color-scheme: dark) { .dsh { --dsh-acc: #3ddc9f; } }
+</style>
+<header class="dsh">
+  <a class="dsh-logo" href="index.html"><span class="dsh-mark">M</span><span>MemCommit</span></a>
+  <nav class="dsh-nav" aria-label="Demos"><a href="index.html">Overview</a><a href="playground.html" aria-current="page">Playground</a><a href="showcase/">Showcase</a><a href="leaderboard.html">Leaderboard</a></nav>
 </header>
 <main class="wrap demo-page" id="content">
 <p class="kicker">Try it</p>
