@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <script>
+      // Served at /memcommit/visualize/ through a proxy that cannot add the trailing slash itself (it would loop).
+      // Without it, every relative path below resolves one directory up, into the manual.
+      if (!/\/$|\.html$/.test(location.pathname)) location.replace(location.pathname + '/' + location.search + location.hash);
+    </script>
+    <title>MemCommit, step by step</title>
+    <meta name="description" content="Step through how MemCommit works: how a write reaches the log, how a stale cascade is found, how rollback and compaction work, and where memory lives." />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=TikTok+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css?v=3" />
+  </head>
+  <body>
+    <header class="site">
+      <span class="logo-mark">M</span><span>Mem<b>Commit</b> <i>viz</i></span>
+      <nav class="site">
+        <a href="../index.html">Demos</a>
+        <b>Showcase</b>
+        <a href="../playground.html" class="wide">Playground</a>
+      </nav>
+    </header>
+
+    <div class="app">
+      <section class="top">
+        <h1>MemCommit, step by step</h1>
+        <p class="lede">
+          Pick a story and step through it. Watch a write travel from the agent to the log on disk, a stale cascade find everything built on a wrong premise,
+          a rollback write its compensating records, and a log fold itself shorter. After every step you see where each memory is, and in what state.
+        </p>
+      </section>
+
+      <nav class="tabs" id="tabs" aria-label="Scenario"></nav>
+      <div class="blurb"><p id="blurb"></p></div>
+      <div class="vrow">
+        <div class="seg" id="variants" role="group" aria-label="Operation"></div>
+        <p class="hint" id="hint"></p>
+      </div>
+
+      <div class="controls" id="controls" role="group" aria-label="Stepper">
+        <button class="btn" id="first" title="First step (Home)" aria-label="First step">⏮</button>
+        <button class="btn" id="prev" title="Back (←)" aria-label="Back one step">◀</button>
+        <button class="btn primary" id="play" title="Play / pause (space)">▶ Play</button>
+        <button class="btn" id="next" title="Forward (→)" aria-label="Forward one step">▶</button>
+        <button class="btn" id="over" title="Skip ahead to the next part of the story (Shift →)">Next part</button>
+        <button class="btn" id="last" title="Last step (End)" aria-label="Last step">⏭</button>
+        <input id="scrub" type="range" min="0" max="0" value="0" aria-label="Step" />
+        <span class="count" id="count"></span>
+        <label class="speed">speed <select id="speed"><option value="1600">slow</option><option value="900" selected>normal</option><option value="400">fast</option></select></label>
+      </div>
+
+      <section class="say" id="sayBox" aria-live="polite">
+        <div class="say-step"><b id="stepName"></b><span class="term" id="stepTerm"></span></div>
+        <p id="say"></p>
+      </section>
+
+      <main class="grid">
+        <div class="col">
+        <section class="pane layers-pane">
+          <div class="ph">
+            <h2>Where it lives</h2>
+            <span class="meta"><i class="zone ram"></i>RAM, lost when the process dies <i class="zone disk"></i>disk, survives</span>
+          </div>
+          <div class="layers" id="layers">
+            <div class="box" id="L-agent" data-layer="agent">
+              <h3>Agent code</h3>
+              <p class="sub">decides what to remember</p>
+            </div>
+            <div class="arrow" aria-hidden="true">→</div>
+            <div class="box ram" id="L-tx" data-layer="tx">
+              <h3>Transaction · write buffer</h3>
+              <p class="sub">BEGIN … COMMIT: changes wait here, not durable yet</p>
+              <div class="buf" id="txBuf"></div>
+              <div class="tape pend" id="txPend"></div>
+            </div>
+            <div class="arrow" aria-hidden="true">→</div>
+            <div class="box disk wide" id="L-engine" data-layer="engine">
+              <h3>Write-ahead log</h3>
+              <p class="sub" id="engineSub">append-only, on disk</p>
+              <div class="tape" id="tape"></div>
+              <div class="snap" id="L-snapshot" data-layer="snapshot"><b>Checkpoint (snapshot file)</b><span id="snapSub">none</span></div>
+            </div>
+            <div class="box ram state" id="L-state" data-layer="state">
+              <h3>State · in-memory view <span class="sees" id="sees"></span></h3>
+              <p class="sub" id="stateSub">rebuilt from the log: status and tier per memory</p>
+              <div class="lanes" id="lanes"></div>
+            </div>
+          </div>
+          <div class="legend">
+            <span><i class="chip live"></i>live</span><span><i class="chip stale"></i>stale</span><span><i class="chip retracted"></i>retracted</span>
+            <span class="sep"></span>
+            <span><i class="op put"></i>put / restore</span><span><i class="op stale"></i>stale</span><span><i class="op retract"></i>retract</span><span><i class="op move"></i>move</span>
+          </div>
+          <details class="meaning" open>
+            <summary>What each state means to the agent</summary>
+            <div class="cards">
+              <div class="card live"><b>Live</b><p>It holds. Recall, search and the note index return it, and the agent may act on it.</p></div>
+              <div class="card stale"><b>Stale: outdated</b><p>It was right when written, but something it was built on changed: Alice moved, so the trip plan from Lyon no longer holds. Recall and search skip it, so the agent does not act on it. Redo the work, and if it comes out the same, it is restored.</p></div>
+              <div class="card retracted"><b>Retracted: wrong</b><p>It was never true, like a spoofed session. Skipped the same way; the difference is the reason. What was built on it goes stale.</p></div>
+              <div class="card archive"><b>Archive (a tier, not a state)</b><p>Still true, but out of working memory, like cold storage. Search reaches it only when asked to.</p></div>
+            </div>
+            <p class="meta">Fetching a memory directly by its id still returns it, labelled with its state. Nothing is ever deleted by going stale or being retracted.</p>
+          </details>
+        </section>
+
+        <section class="pane detail-pane" id="detail" hidden>
+          <div class="ph"><h2 id="detailTitle"></h2><span class="meta" id="detailMeta"></span></div>
+          <div id="detailBody"></div>
+        </section>
+
+        <section class="pane graph-pane">
+          <div class="ph"><h2>Memories and provenance</h2><span class="meta">an arrow means “derived from”; stale propagates along arrows</span></div>
+          <div class="graph" id="graph"></div>
+        </section>
+        </div>
+
+      </main>
+
+      <p class="foot">
+        Every step comes from running a port of the library in your browser, not from an animation drawn by hand. Its tests replay the same stories on the
+        Python library and compare every memory id, log record and hash. Not covered: guards, observers, query references, the SQLite and JSONL engines.
+        
+      </p>
+    </div>
+    <script type="module" src="app.js?v=3"></script>
+  </body>
+</html>

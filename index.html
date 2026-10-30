@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=TikTok+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<title>MemCommit demo</title>
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<header class="site">
+  <a class="logo" href="index.html"><span class="logo-mark">M</span><span>MemCommit</span></a>
+  <nav class="site" aria-label="Demos">
+    <a href="playground.html">Playground</a>
+    <a href="leaderboard.html">Leaderboard</a>
+    <a href="visualize/">Visualize</a>
+    <a href="https://lamng3.com/" class="pill">Lam Nguyen ↗</a>
+  </nav>
+</header>
+<main class="wrap" id="content" style="max-width:1280px">
+<section class="hero">
+  <div>
+    <h1>A transactional memory layer for agents</h1>
+    <p class="lede">MemCommit keeps what agents did and learned as memories in one append-only log, with provenance, tiers, a declared structure, and an offline pass that turns finished sessions into notes.</p>
+    <div class="actions">
+      <a class="btn solid" href="playground.html">Playground</a>
+      <a class="btn" href="leaderboard.html">Leaderboard</a>
+      <a class="btn" href="visualize/">Visualize</a>
+    </div>
+  </div>
+  <div class="demo-card" id="demo">
+    <div class="head"><h3>Time-travel a real memory log</h3><span class="tag">replay of <b>a real run</b></span></div>
+    <p class="try">Try it: Click a memory, then Retract selected, and watch what was built on it go stale. Drag the slider to go back in time.</p>
+    <div class="mems" id="mems"></div>
+    <div class="slider"><span>lsn</span><input id="lsn" type="range" min="0" max="0" value="0" aria-label="Log position"><span id="lsn-out">0</span></div>
+    <p class="logline" id="logline"></p>
+    <div class="actions" style="margin-top:10px">
+      <button type="button" class="btn" id="retract" disabled>Retract selected</button>
+      <button type="button" class="btn" id="undo" disabled>Roll back</button>
+      <button type="button" class="btn" id="reset">Reset</button>
+    </div>
+    <p class="note">Pick a memory, then retract it: everything derived from it goes stale, in one transaction. Drag the slider to see the state at any log position. The log and the cascade come from the library; this page only replays them.</p>
+  </div>
+</section>
+<script src="demo.js"></script>
+</main>
+<footer class="site">MemCommit demo by <a href="https://lamng3.com/">Lam Nguyen</a>.</footer>
+</body>
+</html>
