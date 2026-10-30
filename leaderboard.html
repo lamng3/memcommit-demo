@@ -27,14 +27,14 @@
 </style>
 <header class="dsh">
   <a class="dsh-logo" href="index.html"><span class="dsh-mark">M</span><span>MemCommit</span></a>
-  <nav class="dsh-nav" aria-label="Demos"><a href="index.html">Overview</a><a href="playground.html">Playground</a><a href="showcase/">Showcase</a><a href="leaderboard.html" aria-current="page">Leaderboard</a></nav>
+  <nav class="dsh-nav" aria-label="Demos"><a href="index.html">Overview</a><a href="playground.html">Playground</a><a href="showcase/">Showcase</a><a href="leaderboard.html" aria-current="page">Leaderboard</a><a href="configs.html">Configs</a></nav>
 </header>
 <main class="wrap demo-page" id="content">
 <p class="kicker">Reference</p>
 <h1>Leaderboard</h1>
-<p class="lede">The memory benchmark as a leaderboard: each configuration ranked by accuracy, with the words it read and the log it kept.</p>
+<p class="lede">Every result MemCommit has, as boards you can switch between: public memory benchmarks against other memory systems on one model, the synthetic memory benchmark, eviction policies, and the forgetting curve.</p>
 
-<p>The board is honest about where the library stands. Reading the whole history answers everything but costs the most words. Searching the episodic record answers about 96% of questions from about 20 words. The notes a rule-based extractor writes reach about 49%, and the oracle rows show the same pipeline reaching 100% when the extractor is perfect, so extraction quality is the limit, not the pipeline.</p><div data-arena data-src="leaderboard-data.json"></div><script src="arena.js"></script>
+<p>The boards are initial results, and they say so. The public benchmarks (LoCoMo, LongMemEval, ConvoMem) run every system on the same local 8B model, for ingestion, answers, and judging, on small stratified subsets, through the MemEval harness. A board appears when its runs finish. On the synthetic memory benchmark, searching the episodic record answers about 96% of questions from about 20 words, and the oracle rows show the notes pipeline reaching 100% when extraction is perfect. On the forgetting curve, frequency matters more than recency, and a retention curve fitted to it predicts the next session best.</p><div data-arena data-src="leaderboard-data.json"></div><script src="arena.js"></script>
 
 </main>
 <footer class="site">MemCommit demo by <a href="https://lamng3.com/">Lam Nguyen</a>.</footer>

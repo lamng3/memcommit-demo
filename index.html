@@ -27,13 +27,13 @@
 </style>
 <header class="dsh">
   <a class="dsh-logo" href="index.html"><span class="dsh-mark">M</span><span>MemCommit</span></a>
-  <nav class="dsh-nav" aria-label="Demos"><a href="index.html" aria-current="page">Overview</a><a href="playground.html">Playground</a><a href="showcase/">Showcase</a><a href="leaderboard.html">Leaderboard</a></nav>
+  <nav class="dsh-nav" aria-label="Demos"><a href="index.html" aria-current="page">Overview</a><a href="playground.html">Playground</a><a href="showcase/">Showcase</a><a href="leaderboard.html">Leaderboard</a><a href="configs.html">Configs</a></nav>
 </header>
 <main class="wrap" id="content" style="max-width:1280px">
 <section class="hero">
   <div>
     <h1>A transactional memory layer for agents</h1>
-    <p class="lede">MemCommit keeps what agents did and learned as memories in one append-only log, with provenance, tiers, a declared structure, and an offline pass that turns finished sessions into notes.</p>
+    <p class="lede">MemCommit keeps what agents did and learned as memories in one append-only log, with provenance, tiers, and an offline pass that turns finished sessions into notes and facts. Reasoning over the facts writes memories that go stale with their premises, and eviction weighs a forgetting curve fitted to real conversations against what each memory is.</p>
   </div>
   <div class="demo-card" id="demo">
     <div class="head"><h3>Time-travel a real memory log</h3><span class="tag">replay of <b>a real run</b></span></div>
