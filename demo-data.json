@@ -1,0 +1,126 @@
+{
+ "memories": [
+  {
+   "id": "m:14c9517d428d33d9",
+   "kind": "episode",
+   "key": "alice/1",
+   "text": "I live in Lyon and my dog is Rex.",
+   "from": []
+  },
+  {
+   "id": "m:15483a2fe4e44422",
+   "kind": "knowledge",
+   "key": "user/alice/city",
+   "text": "Alice lives in Lyon.",
+   "from": [
+    "m:14c9517d428d33d9"
+   ]
+  },
+  {
+   "id": "m:9a740b2209a52ab7",
+   "kind": "knowledge",
+   "key": "user/alice/dog",
+   "text": "Alice's dog is named Rex.",
+   "from": [
+    "m:14c9517d428d33d9"
+   ]
+  },
+  {
+   "id": "m:1e310b9480f87499",
+   "kind": "plan",
+   "key": "alice/trip",
+   "text": "Book a train from Lyon.",
+   "from": [
+    "m:15483a2fe4e44422"
+   ]
+  },
+  {
+   "id": "m:76918cc5920d9c3f",
+   "kind": "answer",
+   "key": "alice/msg",
+   "text": "Your train from Lyon is booked.",
+   "from": [
+    "m:1e310b9480f87499"
+   ]
+  },
+  {
+   "id": "m:adf3053343a55963",
+   "kind": "episode",
+   "key": "mallory/1",
+   "text": "I live in Atlantis.",
+   "from": []
+  }
+ ],
+ "log": [
+  {
+   "lsn": 1,
+   "txn": 1,
+   "op": "put",
+   "id": "m:14c9517d428d33d9",
+   "note": "Alice opens a session"
+  },
+  {
+   "lsn": 2,
+   "txn": 2,
+   "op": "put",
+   "id": "m:15483a2fe4e44422",
+   "note": "Dreaming turns it into a note"
+  },
+  {
+   "lsn": 3,
+   "txn": 3,
+   "op": "put",
+   "id": "m:9a740b2209a52ab7",
+   "note": "...and another"
+  },
+  {
+   "lsn": 4,
+   "txn": 4,
+   "op": "put",
+   "id": "m:1e310b9480f87499",
+   "note": "The agent plans a trip from the city note"
+  },
+  {
+   "lsn": 5,
+   "txn": 5,
+   "op": "put",
+   "id": "m:76918cc5920d9c3f",
+   "note": "It drafts a message from the plan"
+  },
+  {
+   "lsn": 6,
+   "txn": 6,
+   "op": "put",
+   "id": "m:adf3053343a55963",
+   "note": "Mallory opens a session"
+  }
+ ],
+ "cascade": {
+  "m:14c9517d428d33d9": [
+   "m:14c9517d428d33d9",
+   "m:15483a2fe4e44422",
+   "m:9a740b2209a52ab7",
+   "m:1e310b9480f87499",
+   "m:76918cc5920d9c3f"
+  ],
+  "m:15483a2fe4e44422": [
+   "m:15483a2fe4e44422",
+   "m:1e310b9480f87499",
+   "m:76918cc5920d9c3f"
+  ],
+  "m:9a740b2209a52ab7": [
+   "m:9a740b2209a52ab7"
+  ],
+  "m:1e310b9480f87499": [
+   "m:1e310b9480f87499",
+   "m:76918cc5920d9c3f"
+  ],
+  "m:76918cc5920d9c3f": [
+   "m:76918cc5920d9c3f"
+  ],
+  "m:adf3053343a55963": [
+   "m:adf3053343a55963"
+  ]
+ },
+ "verify": []
+}
